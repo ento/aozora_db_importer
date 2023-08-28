@@ -1,6 +1,6 @@
 import { ATTRS } from './attrs';
 
-export type StringMap = { [key: string]: string };
+export type StringMap = Record<string, string>;
 
 export type Book = {
     book_id?: string;

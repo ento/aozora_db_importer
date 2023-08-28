@@ -5,6 +5,7 @@ import * as csvlib from 'csv-parse/lib';
 import * as rp from 'request-promise';
 
 import { IDB } from './i_db';
+import { Importer } from './importer';
 
 import AdmZip = require('adm-zip');
 
@@ -49,7 +50,7 @@ function type_conversion(data: string[]): (string | boolean | number | Date)[] {
     });
 }
 
-async function import_to_db(db: IDB, refresh = false): Promise<void> {
+async function import_to_db(importer: Importer, refresh = false): Promise<void> {
     // const zfile = 'x10.zip';
     // const zfile = 'list_person_all_extended_utf8.zip';
     const zfile: null = null;
@@ -59,11 +60,11 @@ async function import_to_db(db: IDB, refresh = false): Promise<void> {
     const parse_result = csvparse(input, options);
     const data = parse_result.map(type_conversion);
 
-    const updated = await db.updated(data, refresh);
+    const updated = await importer.updated(data, refresh);
 
     let count = 0;
     if (updated.length > 0) {
-        count = await db.import_books_persons(updated);
+        count = await importer.import_books_persons(updated);
     }
     // eslint-disable-next-line no-console
     console.log(`${count} entries are updated`);
@@ -79,10 +80,11 @@ async function run(): Promise<void> {
     const { make_db } = await import('./db_' + options.backend);
 
     const db = make_db();
-    await db.connect();
+    const importer = new Importer(db);
+    await importer.connect();
     const refresh = options.refresh;
     await import_to_db(db, refresh);
-    await db.close();
+    await importer.close();
 }
 
 run();
