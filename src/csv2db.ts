@@ -81,7 +81,7 @@ async function run(): Promise<void> {
     const importer = new Importer(db);
     await importer.connect();
     const refresh = options.refresh;
-    await import_to_db(db, refresh);
+    await import_to_db(importer, refresh);
     await importer.close();
 }
 
