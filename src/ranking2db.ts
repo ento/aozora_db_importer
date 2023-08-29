@@ -11,9 +11,9 @@ dotenv.config();
 const base_url = 'https://www.aozora.gr.jp/access_ranking/';
 const re = /.*card(\d+).html/;
 
-function process_response($: CheerioStatic, year_month: string, book_ids: number[]): any[] {
+function process_response($: cheerio.Root, year_month: string, book_ids: number[]): any[] {
     return $('tr[valign]')
-        .map((idx: number, tr: CheerioElement) => {
+        .map((idx: number, tr: cheerio.Element) => {
             if (idx === 0) {
                 return null;
             }

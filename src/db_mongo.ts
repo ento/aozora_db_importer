@@ -9,17 +9,17 @@ const mongodb_port = process.env.AOZORA_MONGODB_PORT || '27017';
 const mongodb_replica_set = process.env.AOZORA_MONGODB_REPLICA_SET;
 const mongo_url = `mongodb://${mongodb_credential}${mongodb_host}:${mongodb_port}/aozora`;
 
-import type { Book as BookBase, Person as PersonBase, StringMap } from './models';
+import type { Book as BookBase, Person as PersonBase } from './models';
 
 //
 // utilities
 //
 type Book = BookBase & {
-    [index: string]: string | StringMap[];
+    [index: string]: string | Record<string, string>[];
 };
 
 type Person = PersonBase & {
-    [index: string]: string | StringMap[];
+    [index: string]: string | Record<string, string>[];
 };
 
 import { IDB } from './i_db';
@@ -114,7 +114,7 @@ class DB implements IDB {
             };
         });
         const options: mongodb.CollectionBulkWriteOptions = { ordered: false };
-        const result = persons.bulkWrite(operations, options);
+        const result = await persons.bulkWrite(operations, options);
         return result.upsertedCount + result.modifiedCount;
     }
 }

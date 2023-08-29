@@ -1,6 +1,11 @@
 import { ATTRS } from './attrs';
 
-export type StringMap = Record<string, string>;
+export type PersonCompact = {
+    first_name: string;
+    last_name: string;
+    full_name: string;
+    person_id: string;
+}
 
 export type Book = {
     book_id?: string;
@@ -17,10 +22,10 @@ export type Book = {
     release_date?: string;
     last_modified?: string;
     card_url?: string;
-    revisers?: StringMap[];
-    editors?: StringMap[];
-    translators?: StringMap[];
-    authors?: StringMap[];
+    revisers?: PersonCompact[];
+    editors?: PersonCompact[];
+    translators?: PersonCompact[];
+    authors?: PersonCompact[];
     base_book_1?: string;
     base_book_1_publisher?: string;
     base_book_1_1st_edition?: string;
@@ -50,11 +55,14 @@ export type Book = {
     html_charset?: string;
     html_updated?: string;
 };
+type RoleKey = 'revisers' | 'editors' | 'translators' | 'authors';
+type SimpleBookKey = keyof Omit<Book, RoleKey>;
 
 export type Person = {
     person_id?: string;
     first_name?: string;
     last_name?: string;
+    full_name?: string|null;
     last_name_yomi?: string;
     first_name_yomi?: string;
     last_name_sort?: string;
@@ -65,14 +73,29 @@ export type Person = {
     date_of_death?: string;
     author_copyright?: string;
 };
+type PersonKey = keyof Person;
+const PERSON_KEYS: PersonKey[] = [
+    'person_id',
+    'first_name',
+    'last_name',
+    'last_name_yomi',
+    'first_name_yomi',
+    'last_name_sort',
+    'first_name_sort',
+    'last_name_roman',
+    'first_name_roman',
+    'date_of_birth',
+    'date_of_death',
+    'author_copyright',
+];
 
 type BookRolePerson = {
     book: Book;
-    role: string;
+    role: RoleKey;
     person: Person;
 };
 
-export function separate_obj(entry: StringMap): BookRolePerson {
+export function separate_obj(entry: Record<string, string>): BookRolePerson {
     const book: Book = {};
     const person: Person = {};
     let role = null;
@@ -80,27 +103,12 @@ export function separate_obj(entry: StringMap): BookRolePerson {
     ATTRS.forEach((e, i) => {
         const value = entry[i];
 
-        if (
-            [
-                'person_id',
-                'first_name',
-                'last_name',
-                'last_name_yomi',
-                'first_name_yomi',
-                'last_name_sort',
-                'first_name_sort',
-                'last_name_roman',
-                'first_name_roman',
-                'date_of_birth',
-                'date_of_death',
-                'author_copyright'
-            ].includes(e)
-        ) {
-            person[e] = value;
+        if (PERSON_KEYS.includes(e as PersonKey)) {
+            person[e as PersonKey] = value;
         } else if (e === 'role') {
             role = value;
         } else {
-            book[e] = value;
+            book[e as SimpleBookKey] = value;
         }
     });
     return { book, role, person };

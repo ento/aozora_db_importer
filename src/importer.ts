@@ -2,7 +2,7 @@ import { IDB } from './i_db';
 import type { Book, Person } from './models';
 import { separate_obj } from './models';
 
-class Importer {
+export class Importer {
     private backend: IDB;
 
     constructor(backend: IDB) {
@@ -40,7 +40,7 @@ class Importer {
             if (!books_batch_list[book.book_id][role]) {
                 books_batch_list[book.book_id][role] = [];
             }
-            (books_batch_list[book.book_id][role] as StringMap[]).push({
+            (books_batch_list[book.book_id][role]).push({
                 first_name: person.first_name,
                 last_name: person.last_name,
                 full_name: person.last_name + person.first_name,
@@ -50,7 +50,7 @@ class Importer {
                 person.full_name = person.last_name + person.first_name;
                 persons_batch_list[person.person_id] = person;
             }
-        })
+        });
 
         return Promise.all([
             this.backend.store_books(books_batch_list),
@@ -59,10 +59,4 @@ class Importer {
             return res.reduce((a, b) => a + b, 0);
         });
     }
-
-    public async import_byname(name: string, bulk_ops: any): Promise<number> {
-        const result = await this._collection(name).bulkWrite(bulk_ops);
-        return result.upsertedCount;
-    }
-
 }

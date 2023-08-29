@@ -1,10 +1,7 @@
 import commandLineArgs from 'command-line-args';
-import csvparse from 'csv-parse/lib/sync';
-
-import * as csvlib from 'csv-parse/lib';
+import { parse as csvparse } from 'csv-parse/sync';
 import * as rp from 'request-promise';
 
-import { IDB } from './i_db';
 import { Importer } from './importer';
 
 import AdmZip = require('adm-zip');
@@ -56,7 +53,7 @@ async function import_to_db(importer: Importer, refresh = false): Promise<void> 
     const zfile: null = null;
 
     const input: string = await get_csv_data(zfile);
-    const options: csvlib.Options = { from: 2 };
+    const options = { from: 2 };
     const parse_result = csvparse(input, options);
     const data = parse_result.map(type_conversion);
 
