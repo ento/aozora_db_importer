@@ -1,6 +1,6 @@
 import commandLineArgs from 'command-line-args';
 import { parse as csvparse } from 'csv-parse/sync';
-import * as rp from 'request-promise';
+import axios from 'axios';
 
 import { Importer } from './importer';
 
@@ -24,7 +24,7 @@ async function get_csv_data(local_file: string | null): Promise<string> {
         const fs = await import('fs');
         csvtext = fs.readFileSync(local_file);
     } else {
-        csvtext = await rp.get(LIST_URL_BASE + LIST_URL_PUB, { encoding: null });
+        csvtext = (await axios.get(LIST_URL_BASE + LIST_URL_PUB, { responseType: 'arraybuffer' })).data;
     }
     const zip = new AdmZip(csvtext);
     return zip.readFile(zip.getEntries()[0]).toString();
