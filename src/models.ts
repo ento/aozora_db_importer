@@ -56,7 +56,8 @@ export type Book = {
     html_charset?: string;
     html_updated?: string;
 };
-type RoleKey = 'revisers' | 'editors' | 'translators' | 'authors';
+type RoleKey = 'revisers' | 'editors' | 'translators' | 'authors' | 'others';
+export const ROLE_KEYS: RoleKey[] = ['revisers', 'editors', 'translators', 'authors', 'others'];
 type SimpleBookKey = keyof Omit<Book, RoleKey>;
 
 export type Person = {

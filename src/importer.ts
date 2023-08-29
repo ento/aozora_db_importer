@@ -1,6 +1,6 @@
 import { IDB } from './i_db';
 import type { Book, Person } from './models';
-import { separate_obj } from './models';
+import { ROLE_KEYS, separate_obj } from './models';
 
 export class Importer {
     private backend: IDB;
@@ -35,10 +35,13 @@ export class Importer {
         updated.forEach((entry: Record<string, string>) => {
             const { book, role, person } = separate_obj(entry);
             if (!books_batch_list[book.book_id]) {
+                ROLE_KEYS.forEach(role_key => {
+                    book[role_key] = [];
+                });
                 books_batch_list[book.book_id] = book;
             }
             if (!books_batch_list[book.book_id][role]) {
-                books_batch_list[book.book_id][role] = [];
+                console.log(`Role ${role} not found for book ${book.book_id}`, entry);
             }
             (books_batch_list[book.book_id][role]).push({
                 first_name: person.first_name,
