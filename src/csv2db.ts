@@ -15,7 +15,8 @@ const ROLE_MAP: { [key: string]: string } = {
     校訂者: 'revisers',
     編者: 'editors',
     翻訳者: 'translators',
-    著者: 'authors'
+    著者: 'authors',
+    その他: 'others',
 };
 
 async function get_csv_data(local_file: string | null): Promise<string> {

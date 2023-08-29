@@ -26,6 +26,7 @@ export type Book = {
     editors?: PersonCompact[];
     translators?: PersonCompact[];
     authors?: PersonCompact[];
+    others?: PersonCompact[];
     base_book_1?: string;
     base_book_1_publisher?: string;
     base_book_1_1st_edition?: string;
