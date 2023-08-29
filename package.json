@@ -13,18 +13,18 @@
     "url": "https://github.com/aozorahack/db_importer.git"
   },
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },
   "license": "MIT",
   "dependencies": {
     "adm-zip": "0.4.14",
-    "cheerio": "1.0.0-rc.3",
+    "cheerio": "^1.0.0-rc.12",
     "command-line-args": "5.1.1",
     "csv-parse": "4.8.6",
     "dotenv": "8.2.0",
     "mongodb": "3.6.3",
     "request": "2.88.2",
-    "request-promise": "4.2.5"
+    "request-promise": "^0.0.1"
   },
   "devDependencies": {
     "@types/adm-zip": "0.4.32",
