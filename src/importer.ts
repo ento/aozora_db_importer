@@ -25,7 +25,10 @@ export class Importer {
         const last_release_date = await this.backend.get_last_release_date();
 
         return data.slice(1).filter(entry => {
-            return last_release_date < new Date(entry[11]);
+            const released = new Date(entry[11]);
+            const modified = new Date(entry[12]);
+            const date_to_compare = released < modified ? modified : released;
+            return last_release_date < date_to_compare;
         });
     }
 
